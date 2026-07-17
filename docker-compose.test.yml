@@ -31,6 +31,7 @@ services:
       GO_GUESTBOOK_DATABASE_USER: goguestbook
       GO_GUESTBOOK_DATABASE_PASSWORD: test-goguestbook-db
       GO_GUESTBOOK_TEST_API_ENABLED: "1"
+      GO_GUESTBOOK_DEV_TOOLS_ENABLED: "1"
       # Low cap so Playwright can fill the guestbook quickly; production default is 10000.
       GO_GUESTBOOK_MAX_MESSAGES: "5"
       # E2E runs many POSTs from one IP; keep production defaults elsewhere.

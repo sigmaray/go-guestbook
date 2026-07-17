@@ -134,7 +134,7 @@ func runServer(cfg *config.Config) {
 		admin.POST("/users/:id/delete", h.DeleteUser)
 
 		tools := admin.Group("/tools")
-		tools.Use(middleware.DevelopmentOnly(cfg))
+		tools.Use(middleware.DevToolsOnly(cfg))
 		{
 			tools.GET("/", h.ToolsPage)
 			tools.POST("/clear-table", h.ToolsClearTable)

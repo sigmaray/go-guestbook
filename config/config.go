@@ -20,6 +20,8 @@ type Config struct {
 	DatabaseUser     string `envconfig:"GO_GUESTBOOK_DATABASE_USER" default:"goguestbook"`
 	DatabasePassword string `envconfig:"GO_GUESTBOOK_DATABASE_PASSWORD" required:"true"`
 	TestAPIEnabled   bool   `envconfig:"GO_GUESTBOOK_TEST_API_ENABLED" default:"false"`
+	// DevToolsEnabled turns on /admin/tools (arbitrary SQL, table clear, seed). Off by default.
+	DevToolsEnabled bool `envconfig:"GO_GUESTBOOK_DEV_TOOLS_ENABLED" default:"false"`
 
 	// MaxMessagesEnabled turns on the guestbook capacity limit (default on).
 	MaxMessagesEnabled bool `envconfig:"GO_GUESTBOOK_MAX_MESSAGES_ENABLED" default:"true"`
@@ -81,7 +83,6 @@ func (c *Config) DSN() string {
 }
 
 // IsDevelopment reports whether the application runs in development mode.
-// Development mode enables the /admin/tools UI and related endpoints.
 func (c *Config) IsDevelopment() bool {
 	return c.Environment == "development"
 }

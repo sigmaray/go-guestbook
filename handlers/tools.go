@@ -37,7 +37,7 @@ type toolsSQLRequest struct {
 	Query string `json:"query" validate:"required"`
 }
 
-// ToolsClearTable truncates the selected table in development mode.
+// ToolsClearTable truncates the selected table when development tools are enabled.
 // The JSON body supplies table as the PostgreSQL table name to clear.
 func (h *Handler) ToolsClearTable(c *gin.Context) {
 	var req toolsClearTableRequest

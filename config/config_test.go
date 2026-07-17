@@ -64,6 +64,33 @@ func TestIsDevelopment(t *testing.T) {
 	}
 }
 
+func TestDevToolsEnabledDefaultOff(t *testing.T) {
+	t.Setenv("GO_GUESTBOOK_SESSION_SECRET", "test-session-secret-with-32-characters")
+	t.Setenv("GO_GUESTBOOK_DATABASE_PASSWORD", "secret")
+
+	cfg, err := config.Load()
+	if err != nil {
+		t.Fatalf("Load() error = %v", err)
+	}
+	if cfg.DevToolsEnabled {
+		t.Fatal("DevToolsEnabled default should be false")
+	}
+}
+
+func TestDevToolsEnabledWhenSet(t *testing.T) {
+	t.Setenv("GO_GUESTBOOK_SESSION_SECRET", "test-session-secret-with-32-characters")
+	t.Setenv("GO_GUESTBOOK_DATABASE_PASSWORD", "secret")
+	t.Setenv("GO_GUESTBOOK_DEV_TOOLS_ENABLED", "1")
+
+	cfg, err := config.Load()
+	if err != nil {
+		t.Fatalf("Load() error = %v", err)
+	}
+	if !cfg.DevToolsEnabled {
+		t.Fatal("DevToolsEnabled should be true when set")
+	}
+}
+
 func TestLoadDefaultsForLimitsAndRateLimits(t *testing.T) {
 	t.Setenv("GO_GUESTBOOK_SESSION_SECRET", "test-session-secret-with-32-characters")
 	t.Setenv("GO_GUESTBOOK_DATABASE_PASSWORD", "secret")

@@ -11,6 +11,7 @@ test.describe('Dev tools', () => {
     await page.goto('/admin/tools', { waitUntil: 'domcontentloaded' });
 
     await expect(page.getByRole('heading', { name: 'Development Tools' })).toBeVisible();
+    await expect(page.getByText('Available only when GO_GUESTBOOK_DEV_TOOLS_ENABLED is set.')).toBeVisible();
     await expect(page.getByRole('link', { name: 'Tools' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Clear table' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Seed messages' })).toBeVisible();
