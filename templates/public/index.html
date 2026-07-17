@@ -1,0 +1,72 @@
+{{ define "public/index.html" }}
+{{ template "public/header.html" . }}
+
+<h2 class="guestbook__heading h4 mb-3">Messages</h2>
+
+{{ range .Messages }}
+<article class="card mb-3 guestbook-message message">
+    <div class="card-body">
+        <header class="guestbook-message__header">
+            <h3 class="guestbook-message__author h5 mb-1 message-author">{{ .DisplayAuthor }}</h3>
+            <p class="text-muted small mb-2 guestbook-message__date message-date">{{ .CreatedAt.Format "Jan 02, 2006 15:04" }}</p>
+        </header>
+        {{ if .Email }}
+            <p class="guestbook-message__email small text-muted message-email">{{ .Email }}</p>
+        {{ end }}
+        <div class="guestbook-message__content message-content">
+            <p class="mb-0">{{ .Content }}</p>
+        </div>
+    </div>
+</article>
+{{ else }}
+    <p class="text-muted guestbook__empty">No messages yet. Be the first to write one.</p>
+{{ end }}
+
+{{ if gt .TotalPages 1 }}
+<nav class="mt-4 pagination guestbook-pagination" aria-label="Messages pagination">
+    <ul class="pagination">
+        {{ if gt .Page 1 }}
+            <li class="page-item"><a class="page-link" href="/?page={{ subtract .Page 1 }}">Previous</a></li>
+        {{ end }}
+        {{ range .Pages }}
+            <li class="page-item{{ if eq . $.Page }} active{{ end }}">
+                {{ if eq . $.Page }}
+                    <span class="page-link">{{ . }}</span>
+                {{ else }}
+                    <a class="page-link" href="/?page={{ . }}">{{ . }}</a>
+                {{ end }}
+            </li>
+        {{ end }}
+        {{ if .HasNext }}
+            <li class="page-item"><a class="page-link" href="/?page={{ add .Page 1 }}">Next</a></li>
+        {{ end }}
+    </ul>
+</nav>
+{{ end }}
+
+<div class="guestbook-form card mb-4 mt-4">
+    <div class="card-body">
+        <h2 class="guestbook-form__title h4">Leave a Message</h2>
+        {{ if .Error }}
+            <div class="alert alert-danger error guestbook-form__error">{{ .Error }}</div>
+        {{ end }}
+        <form action="/messages" method="POST" class="guestbook-form__form" novalidate>
+            <div class="mb-3">
+                <label for="author" class="form-label">Your Name (optional)</label>
+                <input type="text" class="form-control" id="author" name="author" value="{{ .Author }}" maxlength="100">
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email (optional)</label>
+                <input type="email" class="form-control" id="email" name="email" value="{{ .Email }}" maxlength="255">
+            </div>
+            <div class="mb-3">
+                <label for="content" class="form-label">Message</label>
+                <textarea class="form-control" id="content" name="content" rows="4" maxlength="5000">{{ .Content }}</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary guestbook-form__submit">Post Message</button>
+        </form>
+    </div>
+</div>
+
+{{ template "public/footer.html" . }}
+{{ end }}

@@ -1,0 +1,30 @@
+.guestbook-message__author {
+    color: #212529;
+}
+
+.guestbook-message__content {
+    white-space: pre-wrap;
+}
+
+.guestbook-form__title {
+    margin-bottom: 1rem;
+}
+
+.admin-messages__table .message-content {
+    max-width: 24rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-login__card {
+    width: 100%;
+}
+
+.admin-message-show__content {
+    white-space: pre-wrap;
+}
+
+.dev-tools__sql {
+    font-family: monospace;
+}

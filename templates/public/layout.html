@@ -1,0 +1,31 @@
+{{ define "public/header.html" }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Guestbook</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/guestbook.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4 guestbook-nav">
+        <div class="container">
+            <a class="navbar-brand guestbook-nav__brand" href="/">Go Guestbook</a>
+            {{ if .IsLoggedIn }}
+            <div class="ms-auto">
+                <a class="btn btn-outline-secondary btn-sm" href="/admin/messages">Admin</a>
+            </div>
+            {{ end }}
+        </div>
+    </nav>
+    <div class="container guestbook">
+{{ end }}
+
+{{ define "public/footer.html" }}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/confirm-delete.js"></script>
+</body>
+</html>
+{{ end }}

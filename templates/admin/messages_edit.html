@@ -1,0 +1,38 @@
+{{ define "admin/messages_edit.html" }}
+{{ template "admin/header.html" . }}
+
+<h2>Edit Message</h2>
+
+{{ if .Error }}
+    <div class="alert alert-danger error">{{ .Error }}</div>
+{{ end }}
+
+<form action="/admin/messages/{{ .Message.ID }}" method="POST" class="admin-message-form" novalidate>
+    <div class="mb-3">
+        <label for="author" class="form-label">Author (optional)</label>
+        <input type="text" class="form-control" id="author" name="author" value="{{ if .Author }}{{ .Author }}{{ else }}{{ .Message.Author }}{{ end }}" maxlength="100">
+    </div>
+
+    <div class="mb-3">
+        <label for="email" class="form-label">Email (optional)</label>
+        <input type="email" class="form-control" id="email" name="email" value="{{ if .Email }}{{ .Email }}{{ else }}{{ .Message.Email }}{{ end }}" maxlength="255">
+    </div>
+
+    <div class="mb-3">
+        <label for="content" class="form-label">Message</label>
+        <textarea class="form-control" id="content" name="content" rows="6" maxlength="5000">{{ if .Content }}{{ .Content }}{{ else }}{{ .Message.Content }}{{ end }}</textarea>
+    </div>
+
+    <div class="mb-3 admin-message-meta">
+        <p class="mb-1"><strong>IP address:</strong> <span class="message-ip">{{ .Message.IPAddress }}</span></p>
+        <p class="mb-1"><strong>User agent:</strong> <span class="message-user-agent">{{ .Message.UserAgent }}</span></p>
+        <p class="mb-1"><strong>Referer:</strong> <span class="message-referer">{{ .Message.Referer }}</span></p>
+        <p class="mb-0"><strong>Accept-Language:</strong> <span class="message-accept-language">{{ .Message.AcceptLanguage }}</span></p>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update Message</button>
+    <a href="/admin/messages" class="btn btn-link">Cancel</a>
+</form>
+
+{{ template "admin/footer.html" . }}
+{{ end }}

@@ -1,0 +1,31 @@
+{{ define "admin/users_edit.html" }}
+{{ template "admin/header.html" . }}
+
+<h2>Edit User</h2>
+
+{{ if .Error }}
+    <div class="alert alert-danger error">{{ .Error }}</div>
+{{ end }}
+
+<form action="/admin/users/{{ .User.ID }}" method="POST" class="admin-user-form" novalidate>
+    <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" class="form-control" id="username" name="username" value="{{ .User.Username }}" maxlength="100">
+    </div>
+
+    <div class="mb-3">
+        <label for="password" class="form-label">New Password (leave blank to keep current)</label>
+        <input type="password" class="form-control" id="password" name="password" maxlength="128">
+    </div>
+
+    <div class="mb-3">
+        <label for="password_confirm" class="form-label">Confirm New Password</label>
+        <input type="password" class="form-control" id="password_confirm" name="password_confirm" maxlength="128">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update User</button>
+    <a href="/admin/users" class="btn btn-link">Cancel</a>
+</form>
+
+{{ template "admin/footer.html" . }}
+{{ end }}

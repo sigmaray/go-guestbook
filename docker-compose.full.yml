@@ -1,0 +1,53 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: go-guestbook-full-postgres
+    environment:
+      POSTGRES_USER: ${GO_GUESTBOOK_DATABASE_USER:-goguestbook}
+      POSTGRES_PASSWORD: ${GO_GUESTBOOK_DATABASE_PASSWORD:-change-me-goguestbook}
+      POSTGRES_DB: ${GO_GUESTBOOK_DATABASE_NAME:-goguestbook}
+    volumes:
+      - go-guestbook-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U goguestbook -d goguestbook"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  go-guestbook:
+    build: .
+    container_name: go-guestbook-full-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      GIN_MODE: ${GIN_MODE:-release}
+      GO_GUESTBOOK_ENVIRONMENT: ${GO_GUESTBOOK_ENVIRONMENT:-production}
+      GO_GUESTBOOK_HTTP_PORT: ${GO_GUESTBOOK_HTTP_PORT:-8084}
+      GO_GUESTBOOK_SESSION_SECRET: ${GO_GUESTBOOK_SESSION_SECRET:-change-me-session-secret-min-32-chars}
+      GO_GUESTBOOK_SESSION_SECURE: ${GO_GUESTBOOK_SESSION_SECURE:-0}
+      GO_GUESTBOOK_DATABASE_HOST: postgres
+      GO_GUESTBOOK_DATABASE_PORT: 5432
+      GO_GUESTBOOK_DATABASE_NAME: ${GO_GUESTBOOK_DATABASE_NAME:-goguestbook}
+      GO_GUESTBOOK_DATABASE_USER: ${GO_GUESTBOOK_DATABASE_USER:-goguestbook}
+      GO_GUESTBOOK_DATABASE_PASSWORD: ${GO_GUESTBOOK_DATABASE_PASSWORD:-change-me-goguestbook}
+      GO_GUESTBOOK_TEST_API_ENABLED: ${GO_GUESTBOOK_TEST_API_ENABLED:-0}
+      GO_GUESTBOOK_MAX_MESSAGES_ENABLED: ${GO_GUESTBOOK_MAX_MESSAGES_ENABLED:-1}
+      GO_GUESTBOOK_MAX_MESSAGES: ${GO_GUESTBOOK_MAX_MESSAGES:-10000}
+      GO_GUESTBOOK_LOGIN_RATE_LIMIT_ENABLED: ${GO_GUESTBOOK_LOGIN_RATE_LIMIT_ENABLED:-1}
+      GO_GUESTBOOK_LOGIN_RATE_LIMIT_MAX_ATTEMPTS: ${GO_GUESTBOOK_LOGIN_RATE_LIMIT_MAX_ATTEMPTS:-10}
+      GO_GUESTBOOK_LOGIN_RATE_LIMIT_WINDOW: ${GO_GUESTBOOK_LOGIN_RATE_LIMIT_WINDOW:-1m}
+      GO_GUESTBOOK_MESSAGE_RATE_LIMIT_ENABLED: ${GO_GUESTBOOK_MESSAGE_RATE_LIMIT_ENABLED:-1}
+      GO_GUESTBOOK_MESSAGE_RATE_LIMIT_MAX_ATTEMPTS: ${GO_GUESTBOOK_MESSAGE_RATE_LIMIT_MAX_ATTEMPTS:-10}
+      GO_GUESTBOOK_MESSAGE_RATE_LIMIT_WINDOW: ${GO_GUESTBOOK_MESSAGE_RATE_LIMIT_WINDOW:-1m}
+    ports:
+      - "${GO_GUESTBOOK_HTTP_PORT:-8084}:8084"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8084/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  go-guestbook-postgres-data:

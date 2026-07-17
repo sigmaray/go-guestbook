@@ -1,0 +1,40 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: go-guestbook-e2e-postgres
+    environment:
+      POSTGRES_USER: goguestbook
+      POSTGRES_PASSWORD: test-goguestbook-db
+      POSTGRES_DB: goguestbook
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U goguestbook -d goguestbook"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+
+  app:
+    build: .
+    container_name: go-guestbook-e2e-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      GIN_MODE: release
+      GO_GUESTBOOK_ENVIRONMENT: development
+      GO_GUESTBOOK_HTTP_PORT: 8084
+      GO_GUESTBOOK_SESSION_SECRET: test-go-guestbook-session-secret-32chars
+      GO_GUESTBOOK_DATABASE_HOST: postgres
+      GO_GUESTBOOK_DATABASE_PORT: 5432
+      GO_GUESTBOOK_DATABASE_NAME: goguestbook
+      GO_GUESTBOOK_DATABASE_USER: goguestbook
+      GO_GUESTBOOK_DATABASE_PASSWORD: test-goguestbook-db
+      GO_GUESTBOOK_TEST_API_ENABLED: "1"
+      # Low cap so Playwright can fill the guestbook quickly; production default is 10000.
+      GO_GUESTBOOK_MAX_MESSAGES: "5"
+      # E2E runs many POSTs from one IP; keep production defaults elsewhere.
+      GO_GUESTBOOK_LOGIN_RATE_LIMIT_ENABLED: "0"
+      GO_GUESTBOOK_MESSAGE_RATE_LIMIT_ENABLED: "0"
+    ports:
+      - "${GO_GUESTBOOK_HTTP_PORT:-18084}:8084"

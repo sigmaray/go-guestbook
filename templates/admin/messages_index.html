@@ -1,0 +1,52 @@
+{{ define "admin/messages_index.html" }}
+{{ template "admin/header.html" . }}
+
+<h2 class="admin-messages__title">Messages</h2>
+
+<div class="mb-4">
+    <a href="/admin/messages/new" class="btn btn-primary">Create Message</a>
+</div>
+
+{{ if .Error }}
+    <div class="alert alert-danger error">{{ .Error }}</div>
+{{ end }}
+
+<table class="table table-striped admin-messages__table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Author</th>
+            <th>IP</th>
+            <th>Date</th>
+            <th>Content</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ range .Messages }}
+        <tr class="admin-messages__row message-row">
+            <td>{{ .ID }}</td>
+            <td class="message-author">{{ .DisplayAuthor }}</td>
+            <td class="message-ip">{{ .IPAddress }}</td>
+            <td>{{ .CreatedAt.Format "2006-01-02 15:04" }}</td>
+            <td class="message-content">{{ .Content }}</td>
+            <td>
+                <a href="/admin/messages/{{ .ID }}/" class="btn btn-sm btn-outline-secondary">View</a>
+                <a href="/admin/messages/{{ .ID }}/edit" class="btn btn-sm btn-outline-primary">Edit</a>
+                <form action="/admin/messages/{{ .ID }}/delete" method="POST" class="d-inline" data-confirm-delete data-confirm-message="Delete this message?">
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {{ else }}
+        <tr>
+            <td colspan="6" class="text-center text-muted">No messages found.</td>
+        </tr>
+        {{ end }}
+    </tbody>
+</table>
+
+{{ template "admin/pagination.html" .Pagination }}
+
+{{ template "admin/footer.html" . }}
+{{ end }}

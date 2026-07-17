@@ -1,0 +1,42 @@
+{{ define "admin/messages_show.html" }}
+{{ template "admin/header.html" . }}
+
+<h2 class="admin-message-show__title">View Message</h2>
+
+<article class="admin-message-show">
+    <dl class="admin-message-show__fields row mb-4">
+        <dt class="col-sm-3">ID</dt>
+        <dd class="col-sm-9 message-id">{{ .Message.ID }}</dd>
+
+        <dt class="col-sm-3">Author</dt>
+        <dd class="col-sm-9 message-author">{{ .Message.DisplayAuthor }}</dd>
+
+        <dt class="col-sm-3">Email</dt>
+        <dd class="col-sm-9 message-email">{{ if .Message.Email }}{{ .Message.Email }}{{ else }}—{{ end }}</dd>
+
+        <dt class="col-sm-3">Created</dt>
+        <dd class="col-sm-9 message-created-at">{{ .Message.CreatedAt.Format "2006-01-02 15:04:05" }}</dd>
+
+        <dt class="col-sm-3">Updated</dt>
+        <dd class="col-sm-9 message-updated-at">{{ .Message.UpdatedAt.Format "2006-01-02 15:04:05" }}</dd>
+
+        <dt class="col-sm-3">Message</dt>
+        <dd class="col-sm-9 message-content admin-message-show__content">{{ .Message.Content }}</dd>
+    </dl>
+
+    <div class="admin-message-meta mb-4">
+        <h3 class="h5">Visitor metadata</h3>
+        <p class="mb-1"><strong>IP address:</strong> <span class="message-ip">{{ .Message.IPAddress }}</span></p>
+        <p class="mb-1"><strong>User agent:</strong> <span class="message-user-agent">{{ .Message.UserAgent }}</span></p>
+        <p class="mb-1"><strong>Referer:</strong> <span class="message-referer">{{ .Message.Referer }}</span></p>
+        <p class="mb-0"><strong>Accept-Language:</strong> <span class="message-accept-language">{{ .Message.AcceptLanguage }}</span></p>
+    </div>
+
+    <div class="admin-message-show__actions">
+        <a href="/admin/messages/{{ .Message.ID }}/edit" class="btn btn-primary">Edit</a>
+        <a href="/admin/messages" class="btn btn-link">Back to Messages</a>
+    </div>
+</article>
+
+{{ template "admin/footer.html" . }}
+{{ end }}

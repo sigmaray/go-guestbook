@@ -1,0 +1,47 @@
+{{ define "admin/users_list.html" }}
+{{ template "admin/header.html" . }}
+
+<h2>Users</h2>
+
+{{ if .Error }}
+    <div class="alert alert-danger error">{{ .Error }}</div>
+{{ end }}
+
+<div class="mb-4">
+    <a href="/admin/users/new" class="btn btn-primary">Create New User</a>
+</div>
+
+<table class="table table-striped admin-users__table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Created</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ range .Users }}
+        <tr class="admin-users__row">
+            <td>{{ .ID }}</td>
+            <td class="user-username">{{ .Username }}</td>
+            <td>{{ .CreatedAt.Format "2006-01-02 15:04" }}</td>
+            <td>
+                <a href="/admin/users/{{ .ID }}/edit" class="btn btn-sm btn-outline-primary">Edit</a>
+                <form action="/admin/users/{{ .ID }}/delete" method="POST" class="d-inline" data-confirm-delete data-confirm-message="Delete this user?">
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {{ else }}
+        <tr>
+            <td colspan="4" class="text-center text-muted">No users found.</td>
+        </tr>
+        {{ end }}
+    </tbody>
+</table>
+
+{{ template "admin/pagination.html" .Pagination }}
+
+{{ template "admin/footer.html" . }}
+{{ end }}
